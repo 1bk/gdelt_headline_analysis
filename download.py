@@ -1,3 +1,6 @@
+### To limit file download to 50 files for demonstration. Change to 0 to disable demo.
+limit = 1
+
 ###################################################
 ###################################################
 ###                                             ###
@@ -114,6 +117,13 @@ def download_file_multi(list, path="./"):
             download_file(link, file_name, path=path, override=False)
             unzip(file_name, path=path)
             i += 1
+            
+            ### To limit file download for demonstration.
+            if limit == 1:
+               if i == 50:
+                   break
+            ###
+
             print("Downloaded {} out of {}".format(i, len(list)))
     except: 
         print("Error in multi downloading...")

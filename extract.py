@@ -20,11 +20,14 @@ import sys                      # For progress bar, and exiting script.
 # Set global variables and/or functions
 db = DBHelper()                 # Abbreviate the database helper for ease of use.
 # Feel free to change these values:
-website1 = "chinadaily.com.cn"
-website2 = "bbc.co.uk"
+sz_samp = 1500
+sz_head = 1000
+website1 = "bbc.co.uk"
+website2 = "indiatimes.com"
 df_extr = "DataFrame_Extract.pickle"
 df_samp = "DataFrame_Sample.pickle"
 df_head = "DataFrame_Headlined.pickle"
+
 
 # Extracts 2 websites' links into a dataframe and adds an empty Headlines column.
 def build_df_extract(site1, site2, pickle="DataFrame.pickle"):
@@ -34,11 +37,10 @@ def build_df_extract(site1, site2, pickle="DataFrame.pickle"):
     df.columns = ['Website', 'Link']
     df["Headline"] = ''
     pickle_it(df, pickle)
-    print(df.sample(20))
+    print(df.sample(5))
     print("\nDone! - DataFrame completed. Pickled  \'", pickle,"\'")
     return df
 
-#
 def build_df_sample(df, sizeofeach=1000):
     site_list = list(df.Website.unique())
     print("Site to process:", site_list)
@@ -85,7 +87,7 @@ def build_df_headlines(df, pickle="DataFrame_Headlined.pickle"):
         pass
         
 
-# Returns dictionary
+# Returns a lists of dictionary
 def build_site_dict(df, sizeofeach=1000):
     site_list = list(df.Website.unique())
     i = 0
@@ -108,10 +110,20 @@ def build_site_dict(df, sizeofeach=1000):
 def main():    
     # Step 1: Build that dataframe from dataset.
     df_1 = build_df_extract(website1, website2, df_extr)
-
+    
+    ### To handle if size of sample bigger than population
+    global sz_samp
+    global sz_head
+    if len(df_1) < sz_samp:
+        sz_samp = int(round(len(df_1)/4,-1))
+        sz_head = int(round(sz_samp*0.75,-1))
+        print("Size of df: {}; Size to sample: {}; Size for dict.: {}".\
+        format(len(df_1),sz_samp, sz_head))
+    ###
+    
     # Step 2: Randomly extracts 2,000 links for each website into a new dataframe.
     # df_1 = unpickle_it(df_extr)
-    df_2 = build_df_sample(df_1, 1500)
+    df_2 = build_df_sample(df_1, sz_samp)
     # print(df_2.sample(10))
 
     # Step 3: 
@@ -119,7 +131,7 @@ def main():
     
     # Step 4:
     # df_3 = unpickle_it(df_head)
-    build_site_dict(df_3, 1000)
+    build_site_dict(df_3, sz_head)
     
 
 if  __name__ == '__main__':
