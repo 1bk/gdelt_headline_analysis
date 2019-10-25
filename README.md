@@ -1,6 +1,14 @@
 # gdelt_headline_analysis
 News Headlines Analysis of (two) Websites - Using GDELT 2.0 Event Database
 
+## Setting up
+```
+python3 -m venv env
+source env/bin/activate
+pip install -r requirements.txt
+```
+
+## Usage
 
 Main file to run: 
 - analysis.ipynb (viewable on GitHub); or
