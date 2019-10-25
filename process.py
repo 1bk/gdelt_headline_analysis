@@ -64,6 +64,9 @@ def process_all_csv(csv_dict, path=Path_CSV):
         sys.exit("\nKeyboard interruption while processing CSV. Exiting script now.")
     except:
         print("Other error occured while processing.")
+    finally:
+        pickle_it(csv_dict, "just_in_case.pickle")
+        print("Just in case pickle pickled. :)")
 
 # Function to save an object for future use when re-running script.
 def pickle_it(obj, fname="saved.pickle"):
